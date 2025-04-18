@@ -1,40 +1,90 @@
-local ensure_packer = function()
-  local fn = vim.fn
-  local install_path = fn.stdpath('data')..'/site/pack/packer/start/packer.nvim'
-  if fn.empty(fn.glob(install_path)) > 0 then
-    fn.system({'git', 'clone', '--depth', '1', 'https://github.com/wbthomason/packer.nvim', install_path})
-    vim.cmd [[packadd packer.nvim]]
-    return true
-  end
-  return false
-end
+local plugins = {
+  -- TS 
+  {
+    "nvim-treesitter/nvim-treesitter",
+    event = "BufReadPost",
+    build = ":TSUpdate",
+    opts = {
+      ensure_installed = { "lua", "python", "go", "typescript" },
+      highlight = { enable = true },
+    },
+  },
 
-local packer_bootstrap = ensure_packer()
+  -- LSP
+  {
+    "neovim/nvim-lspconfig",
+    ft = { "lua", "python" },
+    config = function()
+      local on_attach = function(_, bufnr)
+        local bufopts = { noremap = true, silent = true, buffer = bufnr }
 
-return require('packer').startup(function(use)
-  use 'wbthomason/packer.nvim'
+        vim.keymap.set(
+          "n",
+          "gd",
+          vim.lsp.buf.definition,
+          vim.tbl_extend("force", bufopts, { desc = "LSP: Go to definition" })
+        )
 
-  -- My plugins here
-  use 'nvim-treesitter/nvim-treesitter'
-  use {
-  'nvim-telescope/telescope.nvim', tag = '0.1.8',
--- or                            , branch = '0.1.x',
-  requires = { {'nvim-lua/plenary.nvim'} }
-  }
+        vim.keymap.set(
+          "n",
+          "K",
+          vim.lsp.buf.hover,
+          vim.tbl_extend("force", bufopts, { desc = "LSP: Hover information" })
+        )
+      end
 
-  -- themes
-  use {
-  'navarasu/onedark.nvim',
-  config = function()
-    require('onedark').setup {
-      style = 'warmer'  -- Or try 'cool', 'warmer', etc.  See the theme's docs.
-    }
-    vim.cmd[[colorscheme onedark]]
-  end
+      local lspconfig = require("lspconfig")
+      lspconfig.lua_ls.setup({ on_attach = on_attach })
+    end,
+  },
+
+  {
+    "williamboman/mason.nvim",
+    config = function()
+      require("mason").setup()
+    end,
+  },
+
+  {
+    "williamboman/mason-lspconfig.nvim",
+    dependencies = { "williamboman/mason.nvim" },
+    config = function()
+      require("mason-lspconfig").setup({
+        ensure_installed = {
+          "lua_ls", "astro", "bashls", "clangd", "cssls",
+          "tailwindcss", "dockerls", "gopls", "html",
+          "eslint", "pyright",
+        },
+      })
+    end,
+  },
+
+  -- Completion
+  {
+    "saghen/blink.cmp",
+    dependencies = { "rafamadriz/friendly-snippets" },
+    version = "1.*",
+    module = "blink.cmp",
+    type = "blink.cmp.Config",
+    opts = {
+      keymap = { preset = "default" },
+      appearance = {
+        nerd_font_variant = "mono",
+      },
+      completion = { documentation = { auto_show = true } },
+      fuzzy = { implementation = "prefer_rust_with_warning" },
+    },
+    opts_extend = { "sources.default" },
+  },
+
+  -- Theme
+  { "projekt0n/github-nvim-theme", name = "github-theme" },
 }
 
+local opts = {
+  defaults = { lazy = false },
+  install = { missing = true },
+  change_detection = { enabled = true },
+}
 
-if packer_bootstrap then
-require('packer').sync()
-end
-end)
+require("lazy").setup(plugins, opts)

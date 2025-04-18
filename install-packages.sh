@@ -35,6 +35,7 @@ flatpaks=(
   com.mattjakeman.ExtensionManager  
   com.brave.Browser
   com.obsproject.Studio
+  com.discordapp.Discord
 )
 
 echo "Installing Flatpaks..."
