@@ -33,9 +33,9 @@ sudo flatpak remote-add --if-not-exists flathub https://dl.flathub.org/repo/flat
 
 flatpaks=(
   com.mattjakeman.ExtensionManager  
-  com.brave.Browser
   com.obsproject.Studio
   com.discordapp.Discord
+  app.zen_browser.zen
 )
 
 echo "Installing Flatpaks..."
