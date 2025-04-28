@@ -13,7 +13,6 @@ local plugins = {
   -- LSP
   {
     "neovim/nvim-lspconfig",
-    ft = { "lua", "python" },
     config = function()
       local on_attach = function(_, bufnr)
         local bufopts = { noremap = true, silent = true, buffer = bufnr }
@@ -35,6 +34,7 @@ local plugins = {
 
       local lspconfig = require("lspconfig")
       lspconfig.lua_ls.setup({ on_attach = on_attach })
+      lspconfig.gopls.setup({ on_attach = on_attach }) -- Add configuration for gopls
     end,
   },
 
