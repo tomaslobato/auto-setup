@@ -7,7 +7,6 @@ vim.opt.shiftwidth = 2
 vim.opt.expandtab = true
 
 vim.cmd('set relativenumber')
-vim.cmd('colorscheme github_dark_default')
 
 local lazypath = vim.fn.stdpath('data') .. '/lazy/lazy.nvim'
 if not vim.loop.fs_stat(lazypath) then
@@ -22,4 +21,9 @@ if not vim.loop.fs_stat(lazypath) then
 end
 vim.opt.rtp:prepend(lazypath)
 
+vim.diagnostic.config({
+  virtual_text = true
+})
+
 require('core.plugins')
+
