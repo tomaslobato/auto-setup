@@ -22,12 +22,6 @@ sudo dnf-3 config-manager --add-repo https://download.docker.com/linux/fedora/do
 echo "Installing packages..."
 sudo dnf install -y ${packages[@]}
 
-echo "Installing fnm (Node Version Manager)..."
-curl -fsSL https://fnm.vercel.app/install | bash
-
-echo "Installing pnpm..."
-curl -fsSL https://get.pnpm.io/install.sh | sh -
-
 echo "Adding Flathub repository..."
 sudo flatpak remote-add --if-not-exists flathub https://dl.flathub.org/repo/flathub.flatpakrepo
 
@@ -40,7 +34,6 @@ flatpaks=(
 
 echo "Installing Flatpaks..."
 sudo flatpak install flathub -y ${flatpaks[@]}
-
 
 echo "Copying configuration files..."
 # Ensure the target directories exist
@@ -63,6 +56,13 @@ if [[ $- == *i* ]] && [ -z "$TMUX" ] && command -v tmux >/dev/null 2>&1; then
 fi
 EOF
   echo "Added tmux auto-start configuration to $BASHRC_FILE."
+
+  echo "Installing fnm (Node Version Manager)..."
+  curl -fsSL https://fnm.vercel.app/install | bash
+
+  echo "Installing pnpm..."
+  curl -fsSL https://get.pnpm.io/install.sh | sh -
+
 else
   # If marker was found, do nothing
   echo "tmux auto-start configuration marker already found in $BASHRC_FILE. Skipping."

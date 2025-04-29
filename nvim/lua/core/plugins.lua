@@ -78,7 +78,11 @@ local plugins = {
   },
 
   -- Theme
-  { "projekt0n/github-nvim-theme", name = "github-theme" },
+  {
+  "projekt0n/github-nvim-theme",
+    lazy = false,
+    priority = 1000,
+  }
 }
 
 local opts = {
