@@ -13,8 +13,15 @@ local plugins = {
   -- LSP
   {
     "neovim/nvim-lspconfig",
+    dependencies = {
+      "williamboman/mason.nvim",
+      "williamboman/mason-lspconfig.nvim",
+    },
     config = function()
-      local on_attach = function(_, bufnr)
+     local capabilities = vim.lsp.protocol.make_client_capabilities()
+
+      local on_attach = function(client, bufnr) 
+
         local bufopts = { noremap = true, silent = true, buffer = bufnr }
 
         vim.keymap.set(
@@ -23,7 +30,6 @@ local plugins = {
           vim.lsp.buf.definition,
           vim.tbl_extend("force", bufopts, { desc = "LSP: Go to definition" })
         )
-
         vim.keymap.set(
           "n",
           "K",
@@ -32,32 +38,50 @@ local plugins = {
         )
       end
 
-      local lspconfig = require("lspconfig")
-      lspconfig.lua_ls.setup({ on_attach = on_attach })
-      lspconfig.gopls.setup({ on_attach = on_attach }) -- Add configuration for gopls
-    end,
-  },
-
-  {
-    "williamboman/mason.nvim",
-    config = function()
-      require("mason").setup()
-    end,
-  },
-
-  {
-    "williamboman/mason-lspconfig.nvim",
-    dependencies = { "williamboman/mason.nvim" },
-    config = function()
-      require("mason-lspconfig").setup({
-        ensure_installed = {
-          "lua_ls", "astro", "bashls", "clangd", "cssls",
-          "tailwindcss", "dockerls", "gopls", "html",
-          "eslint", "pyright",
-        },
+        vim.diagnostic.config({
+          signs = true,
+          underline = true,
+          virtual_text = true, -- Set to false to disable inline messages
+          float = {
+            source = "always", 
+            border = "rounded",
+          },
+          severity_sort = true,
+          update_in_insert = false, 
       })
-    end,
+
+
+      require("mason").setup()
+
+      local servers = {
+        "lua_ls",
+        "astro",
+        "bashls",
+        "clangd",
+        "cssls",
+        "tailwindcss",
+        "dockerls",
+        "gopls",
+        "html",
+        "eslint",
+        "pyright",
+      }
+
+      require("mason-lspconfig").setup({
+        ensure_installed = servers,
+        handlers = {
+          function(server_name)
+            require("lspconfig")[server_name].setup({
+              on_attach = on_attach,
+              capabilities = capabilities 
+            })
+          end,
+        }
+      })
+    end,  
   },
+  { "williamboman/mason.nvim" },
+  { "williamboman/mason-lspconfig.nvim" },
 
   -- Completion
   {
