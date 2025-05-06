@@ -24,6 +24,7 @@ packages=(
   gnome-tweaks
   vlc
   gimp
+  gopls
 )
 
 echo "installing docker"
