@@ -35,6 +35,7 @@ local plugins = {
       local lspconfig = require("lspconfig")
       lspconfig.lua_ls.setup({ on_attach = on_attach })
       lspconfig.gopls.setup({ on_attach = on_attach }) -- Add configuration for gopls
+      lspconfig.eslint.setup({ on_attatch = on_attatch })
     end,
   },
 
@@ -76,13 +77,14 @@ local plugins = {
     },
     opts_extend = { "sources.default" },
   },
+  {
+  'kiddos/gemini.nvim',
+  opts = {}
+  },
+
 
   -- Theme
-  {
-  "projekt0n/github-nvim-theme",
-    lazy = false,
-    priority = 1000,
-  }
+  { "bluz71/vim-moonfly-colors", name = "moonfly", lazy = false, priority = 1000 },
 }
 
 local opts = {
