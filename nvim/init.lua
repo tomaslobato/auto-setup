@@ -10,7 +10,7 @@ end, { desc = 'Open explorer' })
 vim.opt.tabstop = 2
 vim.opt.shiftwidth = 2
 vim.opt.expandtab = true
-vim.cmd('set relativenumber')
+vim.cmd('set number')
 
 -- Lazy.nvim setup
 local lazypath = vim.fn.stdpath('data') .. '/lazy/lazy.nvim'

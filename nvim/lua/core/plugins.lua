@@ -77,14 +77,18 @@ local plugins = {
     },
     opts_extend = { "sources.default" },
   },
-  {
-  'kiddos/gemini.nvim',
-  opts = {}
-  },
-
 
   -- Theme
   { "bluz71/vim-moonfly-colors", name = "moonfly", lazy = false, priority = 1000 },
+
+  -- comment
+  {
+    'numToStr/Comment.nvim',
+    config = function()
+      require('Comment').setup()
+    end
+  }
+
 }
 
 local opts = {
